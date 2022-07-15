@@ -5,7 +5,7 @@
     - [Hello world](./hello_world)
     - [testing](./pri_add)
     - [go vet](./go_vet)
-+ Go 语言控制结构，常用数据结构
++ Go 语言控制结构
   - [if](./if_condition)
   ```go
   // 示例一
@@ -54,7 +54,7 @@
     ```go
     // 示例三，无限循环
     for {
-    	if condition1 {
+        if condition1 {
             break
         }
     }
@@ -80,6 +80,118 @@
         fmt.Printf("index: %d, value: %v", index, value)
     }
     ```
+
++ 常用数据结构
+  + 变量和常量
+    - 常量
   
+      ```go
+      // 常量
+      const identifier type
+      ```
+    - 变量
+    
+      ```go
+      // 变量
+      var identifier type
+      
+      // 声明变量列表
+      var a,b,c bool
+      
+      // 变量初始化
+      var a,b,c int = 1,2,3
+      
+      // 短变量声明，只能在函数内使用，等价于 var a,b,c = 1, true, "test"
+      a,b,c := 1, true, "test"
+      ```
+  + 类型转换
+
+    使用表达式 T(v) 将值 v 转换成 T 类型
+    ```go
+    // 声明并初始化一个 int 类型的变量 i
+    var i int = 1 // i := 1 
+    
+    // 将 i 转换成 float64 类型
+    var f float64 = float64(i) // f := float64(i)
+    
+    // 将 f 转换成 uint 类型 
+    var u uint = uint(f) // u := uint(f)
+    ```    
+
+  + 类型推导
+  
+    声明一个不指定类型的变量，变量的类型由右边的值推导得出
+    ```go
+    var i int
+    j := i // j 的类型由 i 推导得出，也是一个 int
+    ```
+    
+  + [数组(Array)](./my_array)
+    + 特性
+      - 相同类型
+      - 长度固定
+      - 连续内存片段
+      - 以编号形式访问每个元素
+    + 声明方法
+    
+      ```go
+      var identifier [length]type
+      ```
+    + 示例
+    
+      ```go
+      myArray := [3]int{1,2,3} // 长度为 3 的 int 类型的数组，初始化值分别为 1,2,3
+      ```
+    
+  + [切片(Slice)](./my_slice)
+    + 特性
+      - 对数据一个连续片段的引用
+      - 数组定义中不指定长度即为切片，切片在初始化之前默认为 nil，长度为 0
+    + 声明方法
+      - 不定长数组
+        ```go
+        var identifier []type
+        ```
+      - 内置方法 `new` 创建切片
+
+        ```go
+        mySlice := new([]int)
+        ```
+
+      - 内置方法 `make` 创建切片
+        
+        ```go
+        mySlice := make([]int, 0, 20) // 第一个值指定切片元素的类型，第二个值指定切片的长度，第三个值指定切片的容量
+        ```
+    
+    > 切片使用方式与数组类似
+  
+  + [map(字典)](./my_map)
+    + 声明方法
+      - 普通声明
+    
+        ```go
+        var myMap1 map[keyType]valueType
+        ```
+      
+      - 内置函数声明
+      
+        ```go
+        myMap2 := make(map[keyType]valueType, capacity)
+        ```
+  
+  + [结构体](./my_struct)
+    - 结构体标签
+    
+      ```go
+      type myStruct struct {
+        name string `json:"name"`
+      }
+      ```
+
+  + 指针
+  
+    > 使用 & 获取变量的指针
+
 + Go 语言函数
 + Go 语言常用语法，多线程
