@@ -10,12 +10,16 @@ type myStruct struct {
 	Age  int    `int:"age"`
 }
 
+func (m *myStruct) getAge() int {
+	return m.Age
+}
+
 func printMyStruct(m *myStruct) {
 	fmt.Printf("type: %T, value: %v\n", m.Name, m.Name)
 }
 
 func main() {
-	m := myStruct{Name: "zhangsan"}
+	m := myStruct{Name: "zhangsan", Age: 18}
 	fmt.Println(m, m.Name)
 	printMyStruct(&m)
 	reflectM := reflect.TypeOf(m)
@@ -24,4 +28,5 @@ func main() {
 	fmt.Println(col2.Name)                 // 获取struct 字段的名称
 	fmt.Println(col1.Tag.Get("string"), col1.Name)
 	fmt.Println(col2.Tag.Get("int"))
+	fmt.Println(m.getAge())
 }

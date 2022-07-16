@@ -195,7 +195,7 @@
 
 + [Go 语言函数](./my_func/main.go)
   + main 函数，程序的入口
-    - [调用流程](./my_func/func_calling_process.png)
+    - ![调用流程](./my_func/func_calling_process.png)
   + [init 函数](./my_init/main.go)，初始化函数，在 main 函数之前运行
   
     > 谨慎使用 init 函数。当多个依赖项目引用同一项目且被引用项目的初始化在 init 中完成，并且不可重复运行时，会导致启动错误
@@ -233,9 +233,89 @@
     } 
     ```
     
-  + 传递变长参数
+  + [传递变长参数](./my_func/main.go)
   
     ```go
+    func a(slicen []Type, elems ..Type) []Type {
+        return []Type{elem1, elem2}
+    }
     ```
+  
+  + 内置函数
+    - close
+      > 管道关闭
+    - len, cap 
+      > 返回数组、切片、map 的长度或容量
+    - new, make
+      > 内存分配，在内存中创建指定类型的值
+    - copy, append
+      > 操作切片
+    - panic, recover
+      > 异常处理
+    - print
+      > 打印
+    - complex, real, imag
+      > 操作复数
+  
+  + 回调函数
+    > 函数作为参数传入其他函数，并在其他函数内部调用执行
+  
+  + 闭包
+    > 匿名函数
+
+    ```go
+    func () {
+        fmt.Println("hello world")
+    }()
+    ```    
+
+    - 不能独立存在
+    - 可以赋值给其他变量
+      
+      `x := func() {}`
+    
+    - 可以直接调用
+    
+      `func(x, y int){fmt.Println(x+y)}(1, 2)`
+
+    - 可以作为函数返回值
+    
+      `func Add() (func(b int) int)`
+    
++ [方法](./my_struct/main.go)
+  > 作用在接受者上的函数
+  > 一般是针对于结构体的
+  > 方法可以传递指针也可以传递值。传递指针本质上是复制了指针地址，指向的是同一个数据，修改之后原值也会变更
+  
+  - 声明方式
+    ```go
+    func (recv receiver_type) methodName(parameter_list) (return_value_list) {} 
+    ```
+  
++ [接口(Interface)](./my_interface/main.go)
+  > 一组方法的集合
+  
+  + 声明接口
+    ```go
+    type IF interface {
+        Method1(parameter_list) return_type
+    } 
+    ```
+  + struct 无需显示声明实现 interface，只需直接实现接口定义的所有方法即可
+  + struct 除实现 interface 定义的方法之外，也可以有额外的方法
+  + 一个类型可以实现多个接口
+  + 接口中不接受属性定义
+  + 接口可以嵌套其他接口
+  
+  > interface 可能是 nil 的，使用 interface 之前要判断是否为空，否则会引起 panic
+  > struct 初始化就会分配空间，对 struct 的引用不会出现空指针
+
++ [反射机制](./my_reflect/main.go)
+  > 通过反射机制可以获取变量/对象的类型、值、函数等信息
+  + reflect.TypeOf() 返回被检查对象的类型
+  + reflect.ValueOf() 返回被检查对象的值
+
++ [json](./my_json/main.go)
+  > string 转成 struct，struct 的各个字段首字母要大写，不知道为什么
 
 + Go 语言常用语法，多线程

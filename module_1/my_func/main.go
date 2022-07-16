@@ -23,10 +23,28 @@ func returnMultiValues(a, b int) (x, y int) {
 	return
 }
 
+func multiElems1(a ...int) int {
+	sum := 0
+	for _, i := range a {
+		sum += i
+	}
+	return sum
+}
+
+func multiElems2(a []int) int {
+	sum := 0
+	for _, i := range a {
+		sum += i
+	}
+	return sum
+}
+
 func main() {
 	//parameters := getArgs()
 	//fmt.Printf("args: %v\n", parameters)
 	getFlags()
 	fmt.Println(os.Args)
 	fmt.Println(returnMultiValues(1, 2))
+	fmt.Println(multiElems1(1, 2, 3))
+	fmt.Println(multiElems2([]int{1, 2, 3}))
 }
