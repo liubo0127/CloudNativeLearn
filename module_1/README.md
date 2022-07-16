@@ -2,11 +2,11 @@
 
 + Go 语言由来和特性
 + Go 语言环境设置
-    - [Hello world](./hello_world)
-    - [testing](./pri_add)
-    - [go vet](./go_vet)
+    - [Hello world](./hello_world/main.go)
+    - [testing](./pri_add/main.go)
+    - [go vet](./go_vet/main.go)
 + Go 语言控制结构
-  - [if](./if_condition)
+  - [if](./if_condition/main.go)
   ```go
   // 示例一
   if condition1 {
@@ -24,7 +24,7 @@
     return 0
   }
   ```
-  - [switch](./switch_case)
+  - [switch](./switch_case/main.go)
   ```go
   switch val{
     case val1: //什么都没做, pass
@@ -36,7 +36,7 @@
         ... // 默认行为，当前面都没匹配到时执行，或者匹配到了，但是有 fallthrough 继续往下执行到这里
   }
   ```
-  + [for](./for_loop)
+  + [for](./for_loop/main.go)
     - 计数器
     
     ```go
@@ -126,7 +126,7 @@
     j := i // j 的类型由 i 推导得出，也是一个 int
     ```
     
-  + [数组(Array)](./my_array)
+  + [数组(Array)](./my_array/main.go)
     + 特性
       - 相同类型
       - 长度固定
@@ -143,7 +143,7 @@
       myArray := [3]int{1,2,3} // 长度为 3 的 int 类型的数组，初始化值分别为 1,2,3
       ```
     
-  + [切片(Slice)](./my_slice)
+  + [切片(Slice)](./my_slice/main.go)
     + 特性
       - 对数据一个连续片段的引用
       - 数组定义中不指定长度即为切片，切片在初始化之前默认为 nil，长度为 0
@@ -166,7 +166,7 @@
     
     > 切片使用方式与数组类似
   
-  + [map(字典)](./my_map)
+  + [map(字典)](./my_map/my_map.go)
     + 声明方法
       - 普通声明
     
@@ -180,7 +180,7 @@
         myMap2 := make(map[keyType]valueType, capacity)
         ```
   
-  + [结构体](./my_struct)
+  + [结构体](./my_struct/main.go)
     - 结构体标签
     
       ```go
@@ -193,5 +193,49 @@
   
     > 使用 & 获取变量的指针
 
-+ Go 语言函数
++ [Go 语言函数](./my_func/main.go)
+  + main 函数，程序的入口
+    - [调用流程](./my_func/func_calling_process.png)
+  + [init 函数](./my_init/main.go)，初始化函数，在 main 函数之前运行
+  
+    > 谨慎使用 init 函数。当多个依赖项目引用同一项目且被引用项目的初始化在 init 中完成，并且不可重复运行时，会导致启动错误
+    > 对同一个模块的多次引用，只会执行一次 init 函数
+
+  + 参数解析
+  
+    - 第一种方式
+    
+      ```go
+      import os
+      fmt.Println(os.Args) // 输出所有参数，第一个为代码文件本身
+      ```
+      
+    - 第二种
+    
+      ```go
+      import flag
+      name := flag.String("name", "zhangsan", "user name")
+      flag.Parse() // 解析参数
+      fmt.Printf("username is : %s\n", *name)
+      ```
+  
+  + 返回值
+    - 多返回值
+    
+    ```go
+    func a(a, b int) (x,y int) {
+        x, y = a, b
+        return
+    }
+    
+    func b(a, b int) (int, int) {
+        return a, b
+    } 
+    ```
+    
+  + 传递变长参数
+  
+    ```go
+    ```
+
 + Go 语言常用语法，多线程
