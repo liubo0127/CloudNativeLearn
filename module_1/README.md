@@ -315,7 +315,169 @@
   + reflect.TypeOf() 返回被检查对象的类型
   + reflect.ValueOf() 返回被检查对象的值
 
-+ [json](./my_json/main.go)
++ [json 处理](./my_json/main.go)
   > string 转成 struct，struct 的各个字段首字母要大写，不知道为什么
+
++ [错误处理](./my_error/main.go)
+  > Go 语言无内置 exception 机制
+  
+  + 内置 error 接口，供定义错误
+    ```go
+    type error interface {
+        Error() string
+    }
+    ```
+  + 创建新的 error
+    - errors.New()
+      
+      ```go
+      var errNotFound error = errors.New("NotFound")
+      ```
+
+    - fmt.Errorf()
+
+      ```go
+      errNotFound := fmt.Errorf("%s", "NotFound")
+      ```
+  
+  + 通过 err != nil 来判断是否存在 error
+
++ [defer](./my_defer/main.go)
+  > 一种内置方法，会在整个函数或者方法中其他执行完之后，退出之前执行，多个 defer 会倒序执行
+
++ [panic, recover, defer](./my_exception/main.go)
+  - panic
+    > 可在系统出现不可恢复错误时主动调用 panic，panic 会使当前线程直接 crash，panic 之后的业务逻辑都执行不了了
+  - defer
+    > panic 之后，defer 还是可以执行的
+  - recover
+    > 函数从 panic或者错误场景中恢复，如果 recover 成功，线程就不会 crash 掉
+  
+  ```go
+  defer func() {
+    fmt.Println("defer func is called")
+    if err := recover(); err != nil {
+        fmt.Println(err)
+    }
+  }
+  panic("a panic is triggered")
+  ```
+  
++ 并发(concurrency)和并行(parallelism)
+  ![并发和并行](./my_concurrency_parallellism/concurrency_parallellism.png)
+  - 并发
+    > 两个或多个事件在同一时间间隔发生，在同一个 cpu 上间隔执行
+  - 并行
+    > 两个或者多个事件在同一时刻发生，在不同 cpu 上同时执行
+  
++ [goroutine](./my_goroutine/main.go)
+  > go 协程
+  > 轻量级用户态线程
+  + channel 通道
+    > 用于协程之间通讯和同步
+    + 声明方式
+      - var 方式
+      
+        ```go
+        var identifier chan Type
+        ```
+      
+      - make 方式
+
+        ```go
+        ch := make(chan Type)
+        ```
+    + 通道缓冲
+      - 基于 channel 的通信是同步的
+      - 当缓冲区满时，数据的发送是阻塞的
+      - 通过 make 关键字创建通道时可以定义缓冲区数量，默认缓冲区数量是 0
+      
+      ```go
+      ch := make(chan int) // 无缓冲通道，需要同时发送和接收
+      ch := make(chan int, 1) // 缓冲数量为 1 的通道，可以缓存最多一个数据
+      ```
+    
+    + 单向通道
+      > 一般只在函数参数中使用，基本不会独立存在使用
+      - 只发送通道
+        
+        ```go
+        var sendOnly chan <- int
+        ```
+
+      - 只接收通道
+        
+        ```go
+        var receiveOnly < chan int
+        ```
+    
+      - 使用示例
+      
+        ```go
+        var c = make(chan int)
+        go prod(c)
+        go consume(c)
+        
+        func prod(ch chan < int) {
+            for {ch <- 1}
+        }
+        
+        func consume(ch <- chan int) {
+            for { <- ch}
+        }
+        ```
+    + 关闭通道(close)
+      - 通道无需每次关闭
+      - 关闭的作用是告诉接受者该通道再无新数据发送
+      - 只有发送方需要关闭通道
+    
+    + select
+      > 当多个协程同时运行时，可通过 select 轮询多个通道
+      - 如果所有通道都阻塞则等待，如果定义了 default 则执行 default
+      - 如多个通道就绪则随机选择一个
+      
+      ```go
+      select {
+      case v := <- ch1:
+        ...
+      case v := <- ch2:
+        ...
+      default:
+        ...
+      }
+      ```
+      + Timer(定时器)
+        > time.Ticker 以指定的时间间隔重复的向通道 C 发送时间值
+        - 为协程设置超时时间
+        
+        ```go
+        timer := time.NewTimer(time.Second)
+        select {
+        case <- ch:
+            fmt.Println("received from ch")
+        case <- timer.C:
+            fmt.Println("timeout waiting from channel ch")
+        }
+        ```
+
+  + [上下文 Context (context.Context)](./my_context/main.go)
+    > 超时、取消操作或者一些异常情况，往往需要进行抢占操作或者中断后续操作
+    > 从主线程带一些变量到子线程中
+    > Context 本身是一个接口
+    - context.Background
+      > 通常用于主函数、初始化以及测试中，作为一个顶层的 context。我们一般创建的 context 都是基于 Background
+    - context.TODO
+      > TODO 是在不确定使用什么 context 的时候使用
+    - context.WithDeadline
+      > 超时时间
+    - context.WithValue
+      > 向 context 中添加键值对
+    - context.WithCancel
+      > 创建一个可取消的 context
+  
+  + 如何停止一个子协程
+    > 在主协程中 close 掉通道。子协程中监听到通道是被关掉的事件，则自动退出（return）
+    - close(ch) 关闭通道
+    - context.WithTimeout 设置超时时间，子协程中监听 context.Done() 事件判断是否退出
 
 + Go 语言常用语法，多线程
