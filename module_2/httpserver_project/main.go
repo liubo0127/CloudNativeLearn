@@ -3,6 +3,7 @@ package main
 import (
 	"flag"
 	"fmt"
+	"net"
 	"net/http"
 	"net/http/pprof"
 	"os"
@@ -25,11 +26,33 @@ func record(host string, statusCode int) {
 	fmt.Printf("Client Host: %s, statusCode: %d\n", host, statusCode)
 }
 
+func clientIP(r *http.Request) string {
+	var ip string
+	xForwardedFor := r.Header.Get("X-Forwarded-For")
+	if xForwardedFor != "" {
+		ip = strings.TrimSpace(strings.Split(xForwardedFor, ",")[0])
+		if ip != "" {
+			return ip
+		}
+	}
+
+	ip = strings.TrimSpace(r.Header.Get("X-Real-Ip"))
+	if ip != "" {
+		return ip
+	}
+
+	if ip, _, err := net.SplitHostPort(strings.TrimSpace(r.RemoteAddr)); err == nil {
+		return ip
+	}
+
+	return ""
+}
+
 func responseHandle(w http.ResponseWriter, r *http.Request) {
 	var statusCode int
 
 	defer func() {
-		record(r.Host, statusCode)
+		record(clientIP(r), statusCode)
 	}()
 
 	defer func() {
@@ -51,7 +74,7 @@ func responseHandle(w http.ResponseWriter, r *http.Request) {
 func healthz(w http.ResponseWriter, r *http.Request) {
 	var statusCode int
 	defer func() {
-		record(r.Host, statusCode)
+		record(clientIP(r), statusCode)
 	}()
 
 	defer func() {
