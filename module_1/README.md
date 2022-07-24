@@ -364,7 +364,7 @@
   ```
   
 + 并发(concurrency)和并行(parallelism)
-  ![并发和并行](./my_concurrency_parallellism/concurrency_parallellism.png)
+  ![并发和并行](concurrency_parallellism/concurrency_parallellism.png)
   - 并发
     > 两个或多个事件在同一时间间隔发生，在同一个 cpu 上间隔执行
   - 并行
