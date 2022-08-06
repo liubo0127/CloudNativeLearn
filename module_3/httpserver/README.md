@@ -1,3 +1,21 @@
+# 构建镜像
+
+```
+$ docker build -t httpserver:v0.1 -f Dockerfile .
+```
+
+# 打 tag
+
+```
+$ docker tag httpserver:v0.1 liubo0127/httpserver:v0.1
+```
+
+# 上传镜像
+
+```
+$ docker push liubo0127/httpserver:v0.1
+```
+
 # 下载镜像
 
 ```shell
